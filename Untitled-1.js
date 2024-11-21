@@ -1,7 +1,7 @@
-d3.csv("data.csv").then(data => {
+d3.csv("data1.csv").then(data => {
     data.forEach(d => {
         d.year = +d.year; 
-        d.average_price = +d.average_price; 
+        d.resale_price = +d.resale_price; 
     });
 
     console.log(data);
@@ -13,7 +13,7 @@ d3.csv("data.csv").then(data => {
         .range([0, width]);
 
     const yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.average_price)])
+        .domain([0, d3.max(data, d => d.resale_price)])
         .range([height, 0]);
 
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
@@ -26,7 +26,7 @@ d3.csv("data.csv").then(data => {
             .attr("stroke", colorScale(key))
             .attr("d", d3.line()
                 .x(d => xScale(d.year))
-                .y(d => yScale(d.average_price))
+                .y(d => yScale(d.resale_price))
             );
     });
 
