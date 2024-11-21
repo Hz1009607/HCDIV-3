@@ -1,5 +1,4 @@
-// 设置画布大小和边距
-const margin = { top: 50, right: 200, bottom: 50, left: 60 }; // 增加右边距以腾出空间
+const margin = { top: 50, right: 150, bottom: 50, left: 60 };
 const width = 800 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
@@ -8,7 +7,7 @@ const svg = d3.select("#chart")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .attr("transform", translate(${margin.left}, ${margin.top}));
 
 d3.csv("data2.csv").then(data => {
     data.forEach(d => {
@@ -28,9 +27,8 @@ d3.csv("data2.csv").then(data => {
 
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-    // 添加 X 轴
     svg.append("g")
-        .attr("transform", `translate(0, ${height})`)
+        .attr("transform", translate(0, ${height}))
         .call(d3.axisBottom(xScale).tickFormat(d3.format("d")))
         .append("text")
         .attr("x", width / 2)
@@ -39,7 +37,6 @@ d3.csv("data2.csv").then(data => {
         .attr("class", "axis-label")
         .text("Year");
 
-    // 添加 Y 轴
     svg.append("g")
         .call(d3.axisLeft(yScale))
         .append("text")
@@ -50,7 +47,6 @@ d3.csv("data2.csv").then(data => {
         .attr("class", "axis-label")
         .text("Average Price (SGD)");
 
-    // 绘制折线图
     nestedData.forEach((values, key) => {
         svg.append("path")
             .datum(values)
@@ -62,7 +58,6 @@ d3.csv("data2.csv").then(data => {
                 .y(d => yScale(d.average_price))
             );
 
-        // 为每条折线添加图例标签
         svg.append("text")
             .attr("x", width + 10)
             .attr("y", yScale(values[values.length - 1].average_price))
@@ -71,21 +66,18 @@ d3.csv("data2.csv").then(data => {
             .text(key);
     });
 
-    // 添加图例
     const legend = svg.selectAll(".legend")
         .data(nestedData.keys())
         .enter().append("g")
-        .attr("transform", (d, i) => `translate(${width + 20}, ${i * 20})`); // 调整图例布局，增加间距
+        .attr("transform", (d, i) => translate(${width + 10}, ${i * 20}));
 
     legend.append("rect")
         .attr("width", 15)
         .attr("height", 15)
-        .attr("fill", d => colorScale(d))
-        .attr("y", -12); // 调整矩形位置以对齐文字
+        .attr("fill", d => colorScale(d));
 
     legend.append("text")
-        .attr("x", 20) // 增加文字与矩形的水平间隔
-        .attr("y", 0) // 调整文字对齐
-        .style("dominant-baseline", "middle") // 确保文字垂直居中
+        .attr("x", 20)
+        .attr("y", 12)
         .text(d => d);
 });
